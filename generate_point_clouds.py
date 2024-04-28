@@ -46,8 +46,15 @@ def save_point_cloud_csv(filename: str, x, y, z):
             csv_writer.writerow(p)
 
 
-num_points_planes = int(1e4)
-num_points_cylinder = int(3e4)
-save_point_cloud_csv('horizontal_plane.xyz', *generate_horizontal(200, 200, 5, num_points_planes))
-save_point_cloud_csv('vertical_plane.xyz', *generate_vertical(5, 200, 200, num_points_planes))
-save_point_cloud_csv('vertical_cylinder.xyz', *generate_cylinder(100, 10, 200, num_points_cylinder))
+if __name__ == '__main__':
+    num_points_planes = int(1e4)
+    num_points_cylinder = int(3e4)
+
+    save_point_cloud_csv('horizontal_plane.xyz',
+                         *generate_horizontal(200, 200, 5, num_points_planes))
+
+    save_point_cloud_csv('vertical_plane.xyz',
+                         *generate_vertical(5, 200, 200, num_points_planes))
+
+    save_point_cloud_csv('vertical_cylinder.xyz',
+                         *generate_cylinder(100, 10, 200, num_points_cylinder))
