@@ -1,7 +1,7 @@
 import numpy as np
+import csv
 
 from scipy.stats import uniform
-from csv import writer
 
 
 def generate_uniform_cloud(width, height, depth, points_per_dim: int):
@@ -41,20 +41,24 @@ def generate_cylinder(radius, thickness, depth, points_per_dim: int):
 def save_point_cloud_csv(filename: str, x, y, z):
     points = zip(x, y, z)
     with open(filename, 'w', newline='\n') as csv_file:
-        csv_writer = writer(csv_file)
+        csv_writer = csv.writer(csv_file)
         for p in points:
             csv_writer.writerow(p)
 
 
 if __name__ == '__main__':
+    save_merged_file = True
     num_points_planes = int(1e4)
     num_points_cylinder = int(3e4)
 
-    save_point_cloud_csv('horizontal_plane.xyz',
-                         *generate_horizontal(200, 200, 5, num_points_planes))
+    hpp = generate_horizontal(200, 200, 5, num_points_planes)
+    vpp = generate_vertical(5, 200, 200, num_points_planes)
+    cpp = generate_cylinder(100, 10, 200, num_points_cylinder)
 
-    save_point_cloud_csv('vertical_plane.xyz',
-                         *generate_vertical(5, 200, 200, num_points_planes))
+    save_point_cloud_csv('horizontal_plane.xyz', *hpp)
+    save_point_cloud_csv('vertical_plane.xyz', *vpp)
+    save_point_cloud_csv('vertical_cylinder.xyz', *cpp)
+    if save_merged_file:
+        concatenated = np.concatenate((hpp, vpp, cpp), axis=1)
+        save_point_cloud_csv('all_points.xyz', concatenated[0, :], concatenated[1, :], concatenated[2, :])
 
-    save_point_cloud_csv('vertical_cylinder.xyz',
-                         *generate_cylinder(100, 10, 200, num_points_cylinder))
