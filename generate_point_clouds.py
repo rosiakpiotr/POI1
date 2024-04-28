@@ -49,7 +49,7 @@ def save_point_cloud_csv(filename: str, x, y, z):
 if __name__ == '__main__':
     save_merged_file = True
     num_points_planes = int(1e4)
-    num_points_cylinder = int(3e4)
+    num_points_cylinder = int(1e4)
 
     hpp = generate_horizontal(200, 200, 5, num_points_planes)
     vpp = generate_vertical(5, 200, 200, num_points_planes)
