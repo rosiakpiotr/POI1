@@ -40,31 +40,35 @@ def plane_ransac(points, inlier_threshold: float, max_iter=1e2):
 
 
 if __name__ == '__main__':
-    point_cloud_filenames = [
-        'horizontal_plane.xyz',
-        'vertical_plane.xyz',
-        'vertical_cylinder.xyz'
-    ]
+    BASE_DIR = utils.POINT_CLOUD_BASE_DIR_REL
+    for i in range(3):
+        print(f"Przypadek {i+1}:")
+        point_cloud_filenames = [
+            f'{BASE_DIR}/horizontal_plane_{i}.xyz',
+            f'{BASE_DIR}/vertical_plane_{i}.xyz',
+            f'{BASE_DIR}/vertical_cylinder_{i}.xyz'
+        ]
 
-    for filename in point_cloud_filenames:
-        cloud_points = np.array(list(utils.read_point_cloud_csv(filename)))
-        threshold = 5
-        max_iterations = int(1e2)
+        for filename in point_cloud_filenames:
+            cloud_points = np.array(list(utils.read_point_cloud_csv(filename)))
+            threshold = 5
+            max_iterations = int(1e2)
 
-        best_eq, best_inliners = pyrsc.Plane().fit(cloud_points, threshold, maxIteration=max_iterations)
-        plane_eq, points_distances = plane_ransac(cloud_points, threshold, max_iterations)
+            best_eq, best_inliners = pyrsc.Plane().fit(cloud_points, threshold, maxIteration=max_iterations)
+            plane_eq, points_distances = plane_ransac(cloud_points, threshold, max_iterations)
 
-        def rate_and_print(title, eq, distances):
-            def is_cylinder():
-                return (points_distances > threshold).sum() > (len(cloud_points) * 0.5)
+            def rate_and_print(title, eq, distances):
+                def is_cylinder():
+                    return (points_distances > threshold).sum() > (len(cloud_points) * 0.5)
 
-            def is_horizontal_plane():
-                return abs(eq[2]) > 0.95
+                def is_horizontal_plane():
+                    return abs(eq[2]) > 0.95
 
-            print(title, "Ax,By,Cz,D:", f'[{(("{:.3f}, "*4).format(*eq))[:-2]}]',
-                  "powierzchnia cylindryczna" if is_cylinder() else
-                  ("płaszczyzna pozioma " if is_horizontal_plane() else "płaszczyzna pionowa"))
+                print(title, "Ax,By,Cz,D:", f'[{(("{:.3f}, "*4).format(*eq))[:-2]}]',
+                      "powierzchnia cylindryczna" if is_cylinder() else
+                      ("płaszczyzna pozioma " if is_horizontal_plane() else "płaszczyzna pionowa"))
 
 
-        rate_and_print("Implementacja własna:", plane_eq, points_distances)
-        rate_and_print("pyransac3d:", best_eq, compute_distance_from_plane(cloud_points, best_eq))
+            rate_and_print("Implementacja własna:", plane_eq, points_distances)
+            rate_and_print("pyransac3d:", best_eq, compute_distance_from_plane(cloud_points, best_eq))
+        print(" ")
