@@ -1,17 +1,11 @@
 from sklearn.cluster import KMeans
-import csv
+
 import numpy as np
 import matplotlib.pyplot as plt
 
+import utils
 
-def point_cloud_read(filename: str):
-    with open(filename) as csv_file:
-        reader = csv.reader(csv_file, delimiter=',')
-        for x, y, z in reader:
-            yield float(x), float(y), float(z)
-
-
-all_points = np.array(list(point_cloud_read('all_points.xyz')))
+all_points = np.array(list(utils.read_point_cloud_csv('all_points.xyz')))
 
 classifier = KMeans(n_clusters=3)
 clustered = classifier.fit_predict(all_points)

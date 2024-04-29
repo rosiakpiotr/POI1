@@ -1,13 +1,6 @@
 import pyransac3d as pyrsc
 import numpy as np
-import csv
-
-
-def point_cloud_read(filename: str):
-    with open(filename) as csv_file:
-        reader = csv.reader(csv_file, delimiter=',')
-        for x, y, z in reader:
-            yield float(x), float(y), float(z)
+import utils
 
 
 def compute_distance_from_plane(points, plane_eq):
@@ -54,7 +47,7 @@ if __name__ == '__main__':
     ]
 
     for filename in point_cloud_filenames:
-        cloud_points = np.array(list(point_cloud_read(filename)))
+        cloud_points = np.array(list(utils.read_point_cloud_csv(filename)))
         threshold = 5
         max_iterations = int(1e2)
 
