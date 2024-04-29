@@ -5,36 +5,33 @@ import matplotlib.pyplot as plt
 
 import utils
 
-all_points = np.array(list(utils.read_point_cloud_csv('all_points.xyz')))
 
-classifier = KMeans(n_clusters=3)
-clustered = classifier.fit_predict(all_points)
+def run_k_means_on(points: np.array, n_clusters: int, case_idx: int):
+    classifier = KMeans(n_clusters=n_clusters)
+    clustered = classifier.fit_predict(points)
 
-# Actually nothing tells which clustered part is what
-# setting variable names to 'horizontal' or 'vertical'
-# is not correct as there is no way to tell.
-horizontal = clustered == 0
-vertical = clustered == 1
-cylinder = clustered == 2
-
-
-def plot_clustered(data, results, title: str):
-    fig = plt.figure()
+    fig = plt.figure(figsize=(7, 6), dpi=300)
     ax = fig.add_subplot(projection='3d')
-    ax.scatter(data[results, 0], data[results, 1], data[results, 2], s=0.5)
     ax.set_xlabel('x')
     ax.set_ylabel('y')
     ax.set_zlabel('z')
-    plt.title(title)
-    plt.show(block=False)
+    plt.title(f'Klastrowanie K-Średnich (k=3), przypadek {case_idx + 1}')
+
+    def plot_clustered(data, results):
+        ax.scatter(data[results, 0], data[results, 1], data[results, 2], s=0.5)
+
+    for cluster in range(3):
+        plot_clustered(all_points, clustered == cluster)
+    # plt.show()
+    fig.tight_layout()
+    plt.savefig(f'{utils.PLOTS_BASE_DIR_REL}/k_means_case_{case_idx + 1}')
 
 
-def prepare_title(num, results, total_count):
-    return f'Klaster {num} ({100 * results.sum() / total_count}% punktów)'
+if __name__ == '__main__':
+    BASE_DIR = utils.POINT_CLOUD_BASE_DIR_REL
 
-
-point_count = len(all_points)
-plot_clustered(all_points, horizontal, prepare_title(1, horizontal, point_count))
-plot_clustered(all_points, vertical, prepare_title(2, vertical, point_count))
-plot_clustered(all_points, cylinder, prepare_title(3, cylinder, point_count))
-plt.show()
+    for case_idx in range(3):
+        all_points = np.array(list(
+            utils.read_point_cloud_csv(f'{BASE_DIR}/all_points_{case_idx}.xyz'))
+        )
+        run_k_means_on(all_points, 3, case_idx)

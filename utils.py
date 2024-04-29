@@ -1,5 +1,8 @@
 import csv
 
+PLOTS_BASE_DIR_REL = 'plots'
+POINT_CLOUD_BASE_DIR_REL = 'point_clouds'
+
 
 def read_point_cloud_csv(filename: str):
     with open(filename) as csv_file:
