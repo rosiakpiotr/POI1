@@ -21,7 +21,7 @@ def run_k_means_on(points: np.array, n_clusters: int, case_idx: int):
         ax.scatter(data[results, 0], data[results, 1], data[results, 2], s=0.5)
 
     for cluster in range(3):
-        plot_clustered(all_points, clustered == cluster)
+        plot_clustered(points, clustered == cluster)
     # plt.show()
     fig.tight_layout()
     plt.savefig(f'{utils.PLOTS_BASE_DIR_REL}/k_means_case_{case_idx + 1}')
