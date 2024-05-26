@@ -6,4 +6,4 @@ Na kolejnych gałęziach w repozytorium znajdują się rozwiązania do pozostał
 
 ## Zadanie 4
 
-TODO: Describe me :)
+Zadanie polegające na wytrenowaniu sieci perceptorowej w celu rozróżniania rodzajów tekstur na podstawie ich wcześniej wyznaczonych 72 cech.
